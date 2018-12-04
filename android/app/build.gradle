@@ -97,7 +97,7 @@ android {
     buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "com.amzme"
+        applicationId "com.pushamz"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1

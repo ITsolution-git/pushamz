@@ -25,7 +25,7 @@
 
 // let imageUri = 'https://cdn-images-1.medium.com/max/300/1*7xHdCFeYfD8zrIivMiQcCQ.png'
 
-// export default class AmzMe extends Component {
+// export default class PushAmz extends Component {
 //     constructor(properties) {
 //         super(properties);
 
@@ -294,11 +294,11 @@
 //     }
 // });
 
-// AppRegistry.registerComponent('AmzMe', () => AmzMe);
+// AppRegistry.registerComponent('PushAmz', () => PushAmz);
 
 
 
 
 import { AppRegistry } from 'react-native';
 import App from './App';
-AppRegistry.registerComponent('AmzMe', () => App);
+AppRegistry.registerComponent('PushAmz', () => App);
