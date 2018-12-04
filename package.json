@@ -1,0 +1,21 @@
+{
+	"name": "AmzMe",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start"
+	},
+	"dependencies": {
+		"eslint": "^4.0.0",
+		"react": "16.3.1",
+		"react-native": "0.55.4",
+		"react-native-loader": "^1.2.1",
+		"react-native-onesignal": "3.2.8",
+		"react-native-shaking-text": "^0.1.0",
+		"react-native-storage": "^1.0.0-beta.1",
+		"react-navigation": "^1.5.9",
+		"react-redux": "^5.1.1",
+		"redux": "^4.0.1",
+		"redux-thunk": "^2.3.0"
+	}
+}
