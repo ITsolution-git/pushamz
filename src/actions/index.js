@@ -1,11 +1,14 @@
 import * as auth from '../utils/auth';
 import { Alert, AsyncStorage } from 'react-native';
 
-const baseUrl = 'https://spano24.com/fitnessportal/fitness/';
+const baseUrl = 'http://ec2-52-14-208-236.us-east-2.compute.amazonaws.com:3000/';
 
 const ApiManager = function(url, params) {
     let user = auth.getUser();
     let fullUrl = baseUrl + url;
+
+    console.log(fullUrl);
+    debugger
     return fetch(fullUrl, {
         ...params,
         mode: 'cors',
@@ -24,21 +27,18 @@ const ApiManager = function(url, params) {
     
 }
 
-export const verifyPassword = (email, password) => {
+export const verifyPassword = (data) => {
     return async (dispatch, getState) => {
-
-        return ApiManager('login', {
+        return ApiManager('api/users', {
             method: 'POST',
-            data: {
-
-            }
+            body: JSON.stringify(data)
         }).then((json) => {
-            if (!json.hasError) {
-                return auth.onSignIn(json).then(resp=>{
-                    auth.onSignIn(json);
+            if (!json.ops) {
+                return auth.onSignIn(json.ops).then(resp=>{
+                    auth.onSignIn(json.ops);
                     dispatch({
                         type: 'AUTHENTICATE_USER',
-                        payload: json
+                        payload: json.ops
                     });
 
                     return json;
@@ -61,5 +61,13 @@ export const autoSignin = (json) => {
     }
 }
 
+export const signOut = () => {
+    return async (dispatch, getState) => {
 
-
+        dispatch({
+            type: 'SIGNOUT',
+            payload: ''
+        })
+        return auth.onSignOut();
+    }
+}

@@ -10,10 +10,13 @@ class SignInPassword extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sellerId: '',
-            marketplaceId: '',
-            secretKey: '',
-            accessKey: 'dd',
+            sellerId: 'AD0IT7BF702TR',
+            marketPlaceId: 'ATVPDKIKX0DER',
+            secretKey: 'sQZFVpYkjvWvm1si8BfbHVoqW4tkvnMt4MktTn6L',
+            awsAccessKeyId: 'AKIAJFMBKUTOLWF3TE4Q',
+            email: 'test@mail.com',
+
+            errorMessage: '',
             loader: false,
         };
         this.verifyUser = this.verifyUser.bind(this);
@@ -25,19 +28,19 @@ class SignInPassword extends React.Component {
 
     verifyUser() {
         this.setState({ loader: true });
-        this.props.verifyPassword(this.props.userEmail, this.state.activUserPassword)
+        let {sellerId, marketPlaceId, secretKey, awsAccessKeyId, email} = this.state;
+        this.props.verifyPassword({sellerId, marketPlaceId, secretKey, awsAccessKeyId, email})
         .then(result=>{
-            if (result.hasError === false) {
-                this.setState({ wrongPassword: '', wrongPasswordMsg: '' });
-                if (!result.customer.plan_activation_status) {
-                    this.props.navigation.navigate('VocherCode');
-                } else {
-                    this.props.navigation.navigate('WelcomeScreen');
-                }
-            } else if( result.hasError === true) {
-                this.setState({ wrongPassword: 'Passwort', wrongPasswordMsg: 'Dieses Passwort ist nicht korrekt. Bitte versuchen Sie es erneut.' });
+            if (result.ops) {
+                this.setState({ errorMessage: '' });
+                this.props.navigation.navigate('WelcomeScreen');
+            } else {
+                this.setState({ errorMessage: 'The credentials are wrong.' });
             }
 
+            this.setState({ loader: false });
+        }).catch(err=>{
+            this.setState({ errorMessage: 'The credentials are wrong.' });
             this.setState({ loader: false });
         });
     }
@@ -55,14 +58,17 @@ class SignInPassword extends React.Component {
                         <View style={{ flex: 1 }}>
                             <TouchableWithoutFeedback  onPress={Keyboard.dismiss} accessible={false}>
                             <View style={{ flex: 1 }}>
-                                <ShakingText style={{ fontSize: 16, color: '#ffffff' }} >{this.state.wrongPassword}</ShakingText>
-
                                 <View style={styles.password}>
+
                                     <View style={styles.inputPasswordContainer}>
-                                        <TextInput onChangeText={(text) => this.setState({ sellerId: text })} style={[styles.inputPassword, {  fontSize: 24 }]} placeholder='Seller ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.sellerId}/>
-                                        <TextInput onChangeText={(text) => this.setState({ marketplaceId: text })} style={[styles.inputPassword, {  fontSize: 24 }]} placeholder='Marketplace ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.marketplaceId}/>
-                                        <TextInput onChangeText={(text) => this.setState({ secretKey: text })} style={[styles.inputPassword, {  fontSize: 24 }]} placeholder='Secret Key'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.secretKey}/>
-                                        <TextInput onChangeText={(text) => this.setState({ accessKey: text })} style={[styles.inputPassword, {  fontSize: 24 }]} placeholder='AWS Access Key ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)' value={this.state.accessKey}/>
+                                        <TextInput onChangeText={(text) => this.setState({ sellerId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Seller ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.sellerId}/>
+                                        <TextInput onChangeText={(text) => this.setState({ marketPlaceId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Marketplace ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.marketPlaceId}/>
+                                        <TextInput onChangeText={(text) => this.setState({ secretKey: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Secret Key'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.secretKey}/>
+                                        <TextInput onChangeText={(text) => this.setState({ awsAccessKeyId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='AWS Access Key ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)' value={this.state.awsAccessKeyId}/>
+                                        <TextInput onChangeText={(text) => this.setState({ email: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Email'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)' value={this.state.email}/>
+
+                                        <ShakingText style={{ fontSize: 16, color: '#ff0000' }} >{this.state.errorMessage}</ShakingText>
+
                                     </View>
 
                                     <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center', marginBottom: 50 }} onPress={()=> this.verifyUser()}>
@@ -83,14 +89,14 @@ class SignInPassword extends React.Component {
 
 const styles = StyleSheet.create({
     password: {
-        flex: 9,
+        flex: 1,
         justifyContent: 'center',
         backgroundColor: "#454545",
         opacity: 1
     },
     homeImage: {
-        width: '100%',
-        height: '100%',
+        width: width,
+        height: height
     },
     inputPasswordContainer: {
         flex: 1,
@@ -99,7 +105,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     inputPassword: {
-        marginTop: 10,
+        marginTop: 5,
         color: '#FFFFFF',
         fontSize: 20,
     },

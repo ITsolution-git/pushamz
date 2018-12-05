@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import Loader from './Loader';
 
+import { signOut } from '../actions/index';
 
 class WelcomeScreen extends React.Component {
     constructor(props) {
@@ -18,7 +19,7 @@ class WelcomeScreen extends React.Component {
         return (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#454545'}}>
             	<Text style={{fontSize: 20, color: '#fff', textAlign: 'center'}}>You will get notified when there's new orders</Text>
-            	<TouchableOpacity style={[styles.button, {marginTop: 20}]} onPress={() => this.props.navigation.navigate('SignUp')}>
+            	<TouchableOpacity style={[styles.button, {marginTop: 20}]} onPress={() => {this.props.signOut(); this.props.navigation.navigate('Login') }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                         <Text style={{ fontSize: 20, color: '#ffffff', marginVertical: 10, marginHorizontal: 20 }}>Sign out</Text>
                     </View>
@@ -52,6 +53,6 @@ export default connect(state => {
     return {
     }
 }, dispatch => {
-    return bindActionCreators({ }, dispatch)
+    return bindActionCreators({ signOut }, dispatch)
 }
 )(WelcomeScreen);

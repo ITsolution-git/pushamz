@@ -6,7 +6,7 @@ const user = null;
 
 export const USER_KEY = "user-obj";
 export const onSignIn = (obj) => {
-  user = obj.customer;
+  user = obj;
   return AsyncStorage.setItem(USER_KEY, JSON.stringify(obj));
 };
 

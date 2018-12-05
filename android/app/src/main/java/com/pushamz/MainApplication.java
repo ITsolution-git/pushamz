@@ -1,4 +1,4 @@
-package com.rnonesignal;
+package com.pushamz;
 
 import android.app.Application;
 import android.util.Log;

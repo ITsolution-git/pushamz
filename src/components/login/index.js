@@ -20,38 +20,36 @@ class HomeInitial extends React.Component {
         super(props);
         this.state = {
             loader: true,
-            introText: 'Jetzt loslegen!'
         };
-        this.onSkipIntro = this.onSkipIntro.bind(this);
     }
 
     async componentWillMount() {
-        // OneSignal.setLogLevel(7, 0);
+        OneSignal.setLogLevel(7, 0);
 
-        // let requiresConsent = false;
+        let requiresConsent = false;
 
-        // this.setState({emailEnabled: false, 
-        //     animatingEmailButton : false, 
-        //     initialOpenFromPush : "Did NOT open from push",
-        //     activityWidth : 0,
-        //     width: 0,
-        //     activityMargin: 0,
-        //     jsonDebugText : "",
-        //     privacyButtonTitle : "Privacy Consent: Not Granted",
-        //     requirePrivacyConsent : requiresConsent
-        // });
+        this.setState({emailEnabled: false, 
+            animatingEmailButton : false, 
+            initialOpenFromPush : "Did NOT open from push",
+            activityWidth : 0,
+            width: 0,
+            activityMargin: 0,
+            jsonDebugText : "",
+            privacyButtonTitle : "Privacy Consent: Not Granted",
+            requirePrivacyConsent : requiresConsent
+        });
 
-        // OneSignal.setRequiresUserPrivacyConsent(requiresConsent);
+        OneSignal.setRequiresUserPrivacyConsent(requiresConsent);
 
-        // OneSignal.init("3030190b-a0e2-49b3-a75e-f8ac3c4c3c2d", {kOSSettingsKeyAutoPrompt : true});
+        OneSignal.init("0b6427d6-620b-457e-bd39-2cb8058ff542", {kOSSettingsKeyAutoPrompt : true});
 
-        // var providedConsent = await OneSignal.userProvidedPrivacyConsent();
+        var providedConsent = await OneSignal.userProvidedPrivacyConsent();
 
-        // this.setState({privacyButtonTitle : `Privacy Consent: ${providedConsent ? "Granted" : "Not Granted"}`, privacyGranted : providedConsent});
+        this.setState({privacyButtonTitle : `Privacy Consent: ${providedConsent ? "Granted" : "Not Granted"}`, privacyGranted : providedConsent});
 
-        // OneSignal.setLocationShared(false);
+        OneSignal.setLocationShared(false);
 
-        // OneSignal.inFocusDisplaying(2);
+        OneSignal.inFocusDisplaying(2);
     }
 
     componentDidMount() {
@@ -66,32 +64,27 @@ class HomeInitial extends React.Component {
         OneSignal.addEventListener('ids', this.onIds);
         OneSignal.addEventListener('emailSubscription', this.onEmailRegistrationChange);
 
-
         auth.isSignedIn().then(json=>{
             try {
 
                 let obj = JSON.parse(json);
-                if (obj && !obj.hasError) {
-                    this.props.autoSignin(obj);  
-                    Promise.all([this.props.getCurrentUser(), this.props.getNotificationInfo()])
-                    .then(res=>{
-
-                        OneSignal.sendTags({"userId" : obj.customer.id});
-                        OneSignal.configure();  // add this to trigger `ids` event
-
-                        setTimeout(()=>this.setState({ loader: false }), 1000);
-                    }).catch(err=>{
-                        this.props.setOfflineMode(true);
-                        this.props.navigation.navigate('Downloads', {}); 
-                    });
+                if (obj && obj._id) {
+                    this.props.autoSignin(obj);
+                    // OneSignal.sendTags({"userId" : obj._id});
+                    // OneSignal.configure();  // add this to trigger `ids` event
+                    this.props.navigation.navigate('SignInPassword');
+                    setTimeout(()=>this.setState({ loader: false }), 1000);
                 } else {
                     this.setState({loader: false});
                 }
 
             } catch (e) {
+                this.setState({loader: false});
                 throw e;
             }
             
+        }).catch(e => {
+            this.setState({loader: false});
         });
     }
 
@@ -125,35 +118,11 @@ class HomeInitial extends React.Component {
     }
 
     onIds(device) {
-        this.props.setNotificationData(device.userId, Platform.OS);
+        
     }
 
     onLoad () {
         
-    }
-
-    onSkipIntro() {
-        auth.isSignedIn().then(json=>{
-            try {
-
-                let obj = JSON.parse(json);
-                if (obj && !obj.hasError) {
-                    this.props.autoSignin(obj);
-
-                    OneSignal.sendTags({"userId" : obj.customer.id});
-                    OneSignal.configure();  // add this to trigger `ids` event
-                } else {
-                    this.props.navigation.navigate('SignInPassword', {});   
-                }
-
-            } catch (e) {
-                throw e;
-                this.props.navigation.navigate('SignInPassword', {});   
-            }
-            
-        }).catch(err=>{
-            this.props.navigation.navigate('SignInPassword', {});   
-        })
     }
 
     render() {
