@@ -3,14 +3,18 @@ import { Alert, AsyncStorage } from 'react-native';
 
 const baseUrl = 'http://ec2-52-14-208-236.us-east-2.compute.amazonaws.com:3000/';
 
+import OneSignal from 'react-native-onesignal';
 const ApiManager = function(url, params) {
     let user = auth.getUser();
     let fullUrl = baseUrl + url;
 
     console.log(fullUrl);
-    debugger
     return fetch(fullUrl, {
         ...params,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         mode: 'cors',
     })
     .then((data) => {
@@ -33,12 +37,12 @@ export const verifyPassword = (data) => {
             method: 'POST',
             body: JSON.stringify(data)
         }).then((json) => {
-            if (!json.ops) {
-                return auth.onSignIn(json.ops).then(resp=>{
-                    auth.onSignIn(json.ops);
+            if (json.success) {
+                return auth.onSignIn(json.data).then(resp=>{
+                    auth.onSignIn(json.data);
                     dispatch({
                         type: 'AUTHENTICATE_USER',
-                        payload: json.ops
+                        payload: json.data
                     });
 
                     return json;
@@ -63,7 +67,7 @@ export const autoSignin = (json) => {
 
 export const signOut = () => {
     return async (dispatch, getState) => {
-
+        OneSignal.sendTags({"userId" : 0});
         dispatch({
             type: 'SIGNOUT',
             payload: ''

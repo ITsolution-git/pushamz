@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import Loader from '../Loader';
 import { verifyPassword } from '../../actions/index';
 const {height, width} = Dimensions.get('window')
+import OneSignal from 'react-native-onesignal';
+
 class SignInPassword extends React.Component {
     constructor(props) {
         super(props);
@@ -31,9 +33,12 @@ class SignInPassword extends React.Component {
         let {sellerId, marketPlaceId, secretKey, awsAccessKeyId, email} = this.state;
         this.props.verifyPassword({sellerId, marketPlaceId, secretKey, awsAccessKeyId, email})
         .then(result=>{
-            if (result.ops) {
+            if (result.success) {
                 this.setState({ errorMessage: '' });
                 this.props.navigation.navigate('WelcomeScreen');
+
+                OneSignal.sendTags({"userId" : result.data._id});
+                OneSignal.configure();  // add this to trigger `ids` event
             } else {
                 this.setState({ errorMessage: 'The credentials are wrong.' });
             }
@@ -105,7 +110,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     inputPassword: {
-        marginTop: 5,
+        marginTop: 10,
         color: '#FFFFFF',
         fontSize: 20,
     },

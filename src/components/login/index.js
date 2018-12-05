@@ -72,7 +72,7 @@ class HomeInitial extends React.Component {
                     this.props.autoSignin(obj);
                     // OneSignal.sendTags({"userId" : obj._id});
                     // OneSignal.configure();  // add this to trigger `ids` event
-                    this.props.navigation.navigate('SignInPassword');
+                    this.props.navigation.navigate('WelcomeScreen');
                     setTimeout(()=>this.setState({ loader: false }), 1000);
                 } else {
                     this.setState({loader: false});
