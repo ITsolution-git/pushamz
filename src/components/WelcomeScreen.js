@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, Text, ImageBackground, Platform, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, ImageBackground, Platform, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
@@ -14,9 +14,13 @@ class WelcomeScreen extends React.Component {
         this.state = {
             loader: true,
         };
+
+        Keyboard.dismiss();
     }
+
     render() {
         return (
+            <TouchableWithoutFeedback  onPress={Keyboard.dismiss} accessible={false}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#454545'}}>
             	<Text style={{fontSize: 20, color: '#fff', textAlign: 'center'}}>You will get notified when there's new orders</Text>
             	<TouchableOpacity style={[styles.button, {marginTop: 20}]} onPress={() => {this.props.signOut(); this.props.navigation.navigate('Login') }}>
@@ -25,6 +29,7 @@ class WelcomeScreen extends React.Component {
                     </View>
                 </TouchableOpacity>
             </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
