@@ -1,7 +1,7 @@
 import * as auth from '../utils/auth';
 import { Alert, AsyncStorage } from 'react-native';
 
-const baseUrl = 'http://ec2-52-14-208-236.us-east-2.compute.amazonaws.com:3000/';
+const baseUrl = 'http://ec2-3-17-58-195.us-east-2.compute.amazonaws.com:3000/';
 
 import OneSignal from 'react-native-onesignal';
 const ApiManager = function(url, params) {
