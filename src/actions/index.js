@@ -1,7 +1,7 @@
 import * as auth from '../utils/auth';
 import { Alert, AsyncStorage } from 'react-native';
 
-const baseUrl = 'http://ec2-52-14-208-236.us-east-2.compute.amazonaws.com:3000/';
+const baseUrl = 'http://ec2-3-17-58-195.us-east-2.compute.amazonaws.com:3000/';
 
 import OneSignal from 'react-native-onesignal';
 const ApiManager = function(url, params) {
@@ -10,11 +10,11 @@ const ApiManager = function(url, params) {
 
     console.log(fullUrl);
     return fetch(fullUrl, {
-        ...params,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
+        ...params,
         mode: 'cors',
     })
     .then((data) => {
@@ -35,7 +35,11 @@ export const verifyPassword = (data) => {
     return async (dispatch, getState) => {
         return ApiManager('api/users', {
             method: 'POST',
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
         }).then((json) => {
             if (json.success) {
                 return auth.onSignIn(json.data).then(resp=>{

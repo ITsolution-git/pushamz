@@ -12,14 +12,14 @@ class SignInPassword extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sellerId: 'AD0IT7BF702TR',
+            sellerId: 'A1QXOO488UYCC3',
             marketPlaceId: 'ATVPDKIKX0DER',
-            secretKey: 'sQZFVpYkjvWvm1si8BfbHVoqW4tkvnMt4MktTn6L',
-            awsAccessKeyId: 'AKIAJFMBKUTOLWF3TE4Q',
+            mwsAuthToken: 'amzn.mws.f8b3c241-7d22-eede-d20f-fc35eba8efe3',
             email: 'test@mail.com',
 
             errorMessage: '',
             loader: false,
+            showHelp: false
         };
         this.verifyUser = this.verifyUser.bind(this);
     }
@@ -30,8 +30,8 @@ class SignInPassword extends React.Component {
 
     verifyUser() {
         this.setState({ loader: true });
-        let {sellerId, marketPlaceId, secretKey, awsAccessKeyId, email} = this.state;
-        this.props.verifyPassword({sellerId, marketPlaceId, secretKey, awsAccessKeyId, email})
+        let {sellerId, marketPlaceId, mwsAuthToken, email} = this.state;
+        this.props.verifyPassword({sellerId, marketPlaceId, mwsAuthToken, email})
         .then(result=>{
             if (result.success) {
                 this.setState({ errorMessage: '' });
@@ -58,6 +58,28 @@ class SignInPassword extends React.Component {
         return (
             <View style={styles.homeImage} >
                 {
+                    this.state.showHelp &&
+                    <View style={{ position: 'absolute', width: width, height: height, top: 0, left: 0, flex:1, backgroundColor: '#00000080', zIndex: 100}}>
+                        <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center' }}>
+                        </View>
+
+                        <View style={{ flex: 5, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ flex: 1 }}>
+                                <View style={[styles.subContainers, {marginTop: 30, marginBottom: 30, width: width - 20 }]}>
+                                    <Text style={{ textAlign: 'center', fontSize: 18, color: '#838383'}}>Help</Text>
+                                    <Text style={{ textAlign: 'left', fontSize: 18, color: '#838383', marginTop: 10}}>MWS Auth Token: Please authorize our developer ID  2515-8326-5014  to get this token.</Text>
+                                </View>
+                                <TouchableOpacity onPress={() => { this.setState({ showHelp: false}); }} style={[styles.subContainers, { paddingBottom: 20, flexDirection: 'row', alignItems: 'center', 'justifyContent': 'center' }]}>
+                                    <View style={{ backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center', width: 220, height: 60, borderRadius: 52, borderColor: '#4AB3E2', borderWidth: 0.5 }}>
+                                        <Text style={{ fontSize: 17, color: '#4AB3E2' }}>Okay</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                }
+                <View style={{flex: 1}}>
+                {
                     this.state.loader ?
                         <View style={{ flex: 1, backgroundColor: '#454545', opacity: 0.8 }}><Loader /></View> :
                         <View style={{ flex: 1 }}>
@@ -66,27 +88,30 @@ class SignInPassword extends React.Component {
                                 <View style={styles.password}>
 
                                     <View style={styles.inputPasswordContainer}>
-                                        <TextInput onChangeText={(text) => this.setState({ sellerId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Seller ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.sellerId} blurOnSubmit={false}/>
-                                        <TextInput onChangeText={(text) => this.setState({ marketPlaceId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Marketplace ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.marketPlaceId} blurOnSubmit={false}/>
-                                        <TextInput onChangeText={(text) => this.setState({ secretKey: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Secret Key'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.secretKey} blurOnSubmit={false}/>
-                                        <TextInput onChangeText={(text) => this.setState({ awsAccessKeyId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='AWS Access Key ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)' value={this.state.awsAccessKeyId} blurOnSubmit={false}/>
-                                        <TextInput onChangeText={(text) => this.setState({ email: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Email'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)' value={this.state.email} blurOnSubmit={false}/>
+                                        <TextInput onChangeText={(text) => this.setState({ sellerId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Seller ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.sellerId}/>
+                                        <TextInput onChangeText={(text) => this.setState({ marketPlaceId: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Marketplace ID'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.marketPlaceId}/>
+                                        <TextInput onChangeText={(text) => this.setState({ mwsAuthToken: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='MWS Auth Token'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)'  value={this.state.mwsAuthToken}/>
+                                        <TextInput onChangeText={(text) => this.setState({ email: text })} style={[styles.inputPassword, {  fontSize: 20 }]} placeholder='Email'  placeholderTextColor={'#EFE1CB'} autoFocus={true} enablesReturnKeyAutomatically={true} onSubmitEditing={() => this.verifyUser()} underlineColorAndroid='rgba(0,0,0,0)' value={this.state.email}/>
 
                                         <ShakingText style={{ fontSize: 16, color: '#ff0000' }} >{this.state.errorMessage}</ShakingText>
 
                                     </View>
 
-                                    <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center', marginBottom: 50 }} onPress={()=> this.verifyUser()}>
+                                    <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={()=> this.verifyUser()}>
                                         <View style={{ backgroundColor: '#454545', alignItems: 'center', justifyContent: 'center', width: 220, height: 52, borderRadius: 52, borderColor: '#FFFFFF', borderWidth: 1 }}>
                                             <Text style={{ fontSize: 17, color: '#FFFFFF' }}>Go</Text>
                                         </View>
                                     </TouchableOpacity>
-                                        
+
+                                    <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center', marginBottom: 40 }} onPress={()=> {this.setState({showHelp: true})}}>
+                                        <Text style={{ fontSize: 17, color: '#4AB3E2' }}>Need Any Help?</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                             </TouchableWithoutFeedback>
                         </View>
                 }
+                </View>
             </View>
         );
     }
@@ -101,7 +126,7 @@ const styles = StyleSheet.create({
     },
     homeImage: {
         width: width,
-        height: height
+        flex: 1
     },
     inputPasswordContainer: {
         flex: 1,
