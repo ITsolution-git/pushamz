@@ -24,6 +24,15 @@ class SignInPassword extends React.Component {
         this.verifyUser = this.verifyUser.bind(this);
     }
 
+    componentDidMount() {
+        this.onIds = this.onIds.bind(this);
+        OneSignal.addEventListener('ids', this.onIds);
+    }
+
+    onIds() {
+        this.state.result && OneSignal.sendTags({"userId" : this.state.result.data._id});
+    }
+
     componentWillReceiveProps(nextProps) {
         
     }
@@ -37,8 +46,9 @@ class SignInPassword extends React.Component {
                 this.setState({ errorMessage: '' });
                 this.props.navigation.navigate('WelcomeScreen');
 
-                OneSignal.sendTags({"userId" : result.data._id});
+                this.setState({result: result});
                 OneSignal.configure();  // add this to trigger `ids` event
+
             } else {
                 this.setState({ errorMessage: 'The credentials are wrong.' });
             }
